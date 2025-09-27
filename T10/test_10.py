@@ -4,7 +4,7 @@ import os
 import pandas as pd
 filename = os.getcwd()
 print(filename)
-file = pd.read_csv(os.path.join(filename,"T10\\near-earth-comets.csv"))
+file = pd.read_csv(os.path.join(filename,"Data\\near-earth-comets.csv"))
 # 一个非常重要的实践，在init中完成数据的所有转换。
 # 传入dataset的可以是任何类型，但是返回一定要是tensor,一般来说就是lable和features
 class Comet_dataset(Dataset):

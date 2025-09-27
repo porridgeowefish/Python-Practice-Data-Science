@@ -9,7 +9,7 @@ import os
 
 curr_dir = os.getcwd()
 
-data = pd.read_csv(os.path.join(curr_dir,"T12//near-earth-comets.csv"))
+data = pd.read_csv(os.path.join(curr_dir,"Data//near-earth-comets.csv"))
 input = 9
 output = 1
 # 搭建dataset,nn。本质上是利用pytorch中提供的工具，加上那你自己的一些组合，创建出自己的数据加载模块/训练网络。
@@ -27,7 +27,7 @@ class comet_dataset(Dataset):
         return self.features[idx],self.lables[idx]
 
 n_num = 128
-class Comet_prediction(nn.Module):
+class Comet_prediction(nn.Module): # 核心学习，如何创建自己的模型，分为两步：init:获取官方工具包 forward:利用工具包搭建流程，传入数据，返回结果。
     def __init__(self,input_shape,output_shape):
         super().__init__()
         self.w1 = nn.Linear(input_shape,n_num)
@@ -70,3 +70,5 @@ for i in range(10000):
 # In 7000 epoch,loss : 134329.75
 # In 8000 epoch,loss : 176590.984375
 # In 9000 epoch,loss : 20240.654296875
+
+# 经过分析，其实是缺乏对数据的归一化处理。
