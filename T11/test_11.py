@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def func(x):
-    return (x/3)* np.sqrt(abs(np.sin(x)))
+    return 10*np.sin(x)+x**2
 
 
-x = np.linspace(-15,15,50)
+x = np.linspace(-15,15,100)
 x_test = np.linspace(-15,15,50)
 
 y = func(x)
@@ -14,7 +14,7 @@ x = torch.tensor(x,requires_grad=True)
 y = torch.tensor(y,requires_grad=True)
 print(x.shape)
 print(y.shape)
-n = 32
+n = 128
 w1 = torch.randn((1,n),dtype = torch.double,requires_grad = True)  # 定义神经元权重
 bias = torch.randn(n,dtype=torch.double,requires_grad=True) # 定义神经元偏置
 w2 = torch.randn((n,1),dtype = torch.double,requires_grad = True) # 定义输出权重
@@ -23,7 +23,7 @@ lr = 0.0001 # 定义学习率
 loss = []
 x = x.unsqueeze(1)
 y = y.unsqueeze(1)
-for _ in range(2000000):
+for _ in range(200000):
     mid = x*w1+bias
     hidden = torch.relu(mid) 
     pre = hidden@w2
