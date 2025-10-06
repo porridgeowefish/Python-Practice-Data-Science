@@ -75,7 +75,7 @@ with torch.no_grad():
         result = Modul(f)
         softmax = nn.Softmax(dim = 1)
         result = softmax(result)
-        predict = torch.max(result,dim=1)
+        predict = torch.max(result,dim=1) # 依据概率，提取
         label_predict = predict.indices
         correct_prediction = torch.sum(label_predict==l)
         correct = correct_prediction.item()
