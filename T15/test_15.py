@@ -9,7 +9,7 @@ import torch.nn as nn
 import torch.nn.functional as F # 方便使用relu和最大池化。
 import matplotlib.pyplot as plt
 
-# 数据增强和归一化
+# 数据增强和归一化 
 transform_train = transforms.Compose([
  transforms.RandomHorizontalFlip(p=0.5),
  transforms.RandomRotation(degrees=10),
@@ -39,7 +39,7 @@ class CNN(nn.Module):
         self.w2 = nn.Linear(128,10) 
     def forward(self,x):
         x = F.relu(self.conv1(x))
-        x = F.relu(F.max_pool2d(self.conv2(x),2))
+        x = F.relu(F.max_pool2d(self.conv2(x),2)) 
         x = F.relu(F.max_pool2d(self.conv3(x),2))
         x = self.GAP(x)
         x = x.view(-1, 128) 
@@ -101,6 +101,7 @@ with torch.no_grad():
         correct += correct_pre.item()
 
 print(f"准确率为:{correct/len(testset)}")
+
 epochs = range(epoch) # 把epoch变成list，使得能够画图
 plt.plot(epochs,loss_avg)
 plt.xlabel("Epochs")
