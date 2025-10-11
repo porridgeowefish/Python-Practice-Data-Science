@@ -30,7 +30,7 @@ transform=transform_test)
 trainloader = DataLoader(trainset, batch_size=128, shuffle=True)
 testloader = DataLoader(testset, batch_size=128, shuffle=False)
 # 3 x 32 x 32 的结构定义卷积神经网络
-class CNN(nn.Module): # 模型总参数量为1792+78356+147584+16512+1290+3*256+128 = 246430个参数，少于50w
+class CNN(nn.Module): # 模型总参数量为1792+78356+147584+132096+10250+2*256+ 2048 = 372766个参数，少于50w
     def __init__(self):
         super().__init__()
         self.conv1 = nn.Conv2d(3,64,kernel_size=(3,3),padding=1) # 第一卷积层 参数个数是：64*3*3*3+64 = 1792个参数
@@ -40,9 +40,9 @@ class CNN(nn.Module): # 模型总参数量为1792+78356+147584+16512+1290+3*256+
         self.conv3 = nn.Conv2d(128,128,kernel_size=(3,3),padding=2,dilation=2) # 加入空洞卷积,相当于扩大了卷积核，为了维持图片是原大小,填充是2
         self.bn3 = nn.BatchNorm2d(num_features=128) # gamma+beta 参数有256      # 第三层卷积层，参数个数是128*128*3*3+128 = 147584 个参数
         self.GAP = nn.AdaptiveAvgPool2d((1,1))  
-        self.w1 = nn.Linear(128,128) # 参数个数 128*128 + 128 = 16512
-        self.bn4 = nn.BatchNorm1d(num_features=128) # gamma+beta 参数有256
-        self.w2 = nn.Linear(128,10)  # 参数个数 128*10 + 10 = 1290
+        self.w1 = nn.Linear(128,1024) # 参数个数 128*500 + 500 = 132096
+        self.bn4 = nn.BatchNorm1d(num_features=1024) # gamma+beta 参数有2048
+        self.w2 = nn.Linear(1024,10)  # 参数个数 1024*10+10 = 10250
     def forward(self,x):
         x = self.conv1(x) # 卷积
         x = self.bn1(x)  # 归一化
@@ -64,7 +64,7 @@ class CNN(nn.Module): # 模型总参数量为1792+78356+147584+16512+1290+3*256+
         x = self.w1(x)
         x = self.bn4(x) # 全连接层也使用BatchNorm，加快收敛速度！
         x = F.leaky_relu(x)
-        x = F.dropout(x,p=0.3) # 使用dropout，可能导致收敛速度变慢！
+        x = F.dropout(x,p=0.5) # 使用dropout，可能导致收敛速度变慢！
         x = self.w2(x)
         return x
 if torch.cuda.is_available():
@@ -76,7 +76,7 @@ else:
 cost = nn.CrossEntropyLoss()
 CNN_module = CNN().to(device)
 optimizer = optim.Adam(CNN_module.parameters(),lr=0.001,weight_decay=0.00001) # L2正则化，使用交叉损失熵计算的同时加上L2范数，对模型复杂度的惩罚。
-scheduler = optim.lr_scheduler.StepLR(optimizer,step_size=20,gamma=0.5) # 引入学习率调度器。
+scheduler = optim.lr_scheduler.StepLR(optimizer,step_size=20,gamma=0.1) # 引入学习率调度器。
 epoch = 60 
 loss_avg = []
 Accuracy = []

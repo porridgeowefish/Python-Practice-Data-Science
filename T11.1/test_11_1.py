@@ -47,7 +47,7 @@ for i in range(100000): # epoch 为 500
         print(f"In epoch {i}: loss is: {np.mean(batch_loss)}")
 
 
-
+# 注意这里没有进入eval 模式
 x_test = torch.tensor(x_test,requires_grad=True,dtype=torch.float32).unsqueeze(1)
 y_test = net(x_test)
 x_test = x_test.detach().numpy() # 从计算图上剥离，然后转换成ndarray

@@ -146,3 +146,36 @@ plt.grid(True)
 plt.savefig(".//T18//Ac.png")
 plt.show()
 
+"""
+Using CUDA: NVIDIA GeForce RTX 5060 Laptop GPU
+In 5 epoch: the loss is:0.7659256790605042
+In 10 epoch: the loss is:0.550064946379503
+第10epoch展示测试结果:
+Loss in 10个 epoch(Test set):0.6191460886333562
+第10个epoch准确率为:78.24%
+In 15 epoch: the loss is:0.43835689466627664
+In 20 epoch: the loss is:0.3488970318871081
+第20epoch展示测试结果:
+Loss in 20个 epoch(Test set):0.646534653404091
+第20个epoch准确率为:80.35%
+In 25 epoch: the loss is:0.29515862224809347
+In 30 epoch: the loss is:0.2400699266234932
+第30epoch展示测试结果:
+Loss in 30个 epoch(Test set):0.48370944171012203
+第30个epoch准确率为:85.38%
+In 35 epoch: the loss is:0.1991894608720794
+In 40 epoch: the loss is:0.1603963695028249
+第40epoch展示测试结果:
+Loss in 40个 epoch(Test set):0.4808829185328906
+第40个epoch准确率为:86.59%
+In 45 epoch: the loss is:0.1293955358779034
+In 50 epoch: the loss is:0.11187799597906944
+第50epoch展示测试结果:
+Loss in 50个 epoch(Test set):0.46086612626721585
+第50个epoch准确率为:87.71%
+In 55 epoch: the loss is:0.10150068046529885
+In 60 epoch: the loss is:0.09784189894642976
+第60epoch展示测试结果:
+Loss in 60个 epoch(Test set):0.46563554772093324
+第60个epoch准确率为:87.83999999999999%
+"""
