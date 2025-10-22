@@ -10,6 +10,7 @@ import torchvision.transforms as transforms
 import torch.nn as nn
 import torch.nn.functional as F # 方便使用relu和最大池化。
 import matplotlib.pyplot as plt
+from torchinfo import summary # 用于展示模型信息
 
 # 数据增强和归一化
 transform_train = transforms.Compose([
@@ -43,6 +44,8 @@ def vgg_block(conv_num,input,output):
     vgg.append(nn.MaxPool2d(kernel_size=2,stride=2))
     return nn.Sequential(*vgg)
 
+def show_info(model,input_size = (1,3,32,32)):
+    summary(model,input_size=input_size)
 
 class CNN(nn.Module): 
     def __init__(self):
@@ -64,6 +67,7 @@ class CNN(nn.Module):
         x = F.dropout(x,p=0.5) # 使用dropout，可能导致收敛速度变慢！
         x = self.w2(x)
         return x
+    
 if torch.cuda.is_available():
     device = torch.device("cuda")
     print("Using CUDA:",torch.cuda.get_device_name(0))
@@ -78,6 +82,7 @@ scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer,T_max = epoch)
 loss_avg = []
 Accuracy = []
 test_loss = []
+show_info(CNN_module)
 def test_eval(i):
     print(f"第{i+1}epoch展示测试结果:")
     loss_tem = []

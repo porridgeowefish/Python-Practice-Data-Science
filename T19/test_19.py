@@ -21,7 +21,7 @@ transform_train = transforms.Compose([
     transforms.RandomHorizontalFlip(p=0.5),
     transforms.RandomRotation(degrees=10),
     transforms.Resize(Size),
-    transforms.ToTensor(),
+    transforms.ToTensor(), # 注意哈，ToSensor是把PIL图片变成Tensor的操作，会有一个[0,1]的归一化
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616)) # CIFAR-10均值标准差
 ])
 transform_test = transforms.Compose([
@@ -101,11 +101,11 @@ def test_eval(i):
     model.eval()
     correct = 0
     with torch.no_grad():
-        for f,l in testloader:
+        for f,lable in testloader:
             f=f.to(device)
-            l=l.to(device)
+            lable=lable.to(device)
             y = model(f)
-            loss = cost(y,l)
+            loss = cost(y,lable)
             loss_tem.append(loss.item())
             # --下面计算准确率
             softmax = nn.Softmax(dim=1)
@@ -142,7 +142,7 @@ for i in range(epoch):
 
 torch.save(model,".//T19//model.pth")
 
-loss_y = [5,10,15]
+loss_y = [5,10,15,20]
 epochs = range(epoch) # 把epoch变成list，使得能够画图
 show_model(model,test_num=10)
 plt.show()
