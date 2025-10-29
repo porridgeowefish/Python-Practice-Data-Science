@@ -17,6 +17,7 @@ if torch.cuda.is_available():
 else:
     device = torch.device("cpu")
     print("Cuda不存在,使用CPU")
+
 transform_train = transforms.Compose([
     transforms.RandomHorizontalFlip(p=0.5),
     transforms.RandomRotation(degrees=10),
@@ -82,14 +83,18 @@ showimg(out,title = [class_name[x] for x in classes])
 plt.show()
 
 model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT) 
-for param in model.parameters():
-    param.requires_grad = False
 
 num = model.fc.in_features# 这是在resnet的model中定义的
 model.fc = nn.Linear(num,10)
 model = model.to(device)
 cost = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.fc.parameters(),lr=0.001)
+finetuning_layer = [p for name,p in model.named_parameters() if "fc" not in name] # 筛选出不是fc层的模型
+new_layer = model.fc.parameters()
+finetuning_lr = 0.0001
+new_lr = 0.001
+optimizer = optim.Adam([{"params":finetuning_layer,"lr":finetuning_lr},
+                        {"params":new_layer,"lr":new_lr}
+                        ],weight_decay=0.0001)
 scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer,T_max=10)
 epoch = 10
 step = 2
@@ -111,7 +116,7 @@ def test_eval(i):
             # --下面计算准确率
             softmax = nn.Softmax(dim=1)
             result = softmax(y)
-            _ , predict = torch.max(result,dim=1)
+            _, predict = torch.max(result,dim=1)
             correct_pre = torch.sum(predict==lable) 
             correct += correct_pre.item()
     print(f"Loss in {i+1}个 epoch(Test set):{np.mean(loss_tem)}")
@@ -140,11 +145,12 @@ for i in range(epoch):
     if((i+1)%step==0):
         test_eval(i)
 
-torch.save(model,".//T19//model.pth")
+torch.save(model,".//T20//model.pth")
 
-loss_y = [a for a in range(1,epoch,step)] # 列表推导式
+loss_y = [a for a in range(1,epoch,step)] # 列表推导式 [expression for item in iterable]
 epochs = range(epoch) # 把epoch变成list，使得能够画图
 show_model(model,test_num=10)
+plt.tight_layout()
 plt.show()
 plt.plot(epochs,loss_avg,label='Train_loss',color = "blue")
 plt.plot(loss_y,test_loss,label='Test_loss',color = "red")
@@ -153,45 +159,12 @@ plt.ylabel("Loss")
 plt.title("Loss Curve")
 plt.grid(True)
 plt.legend() # 这个legend是用来显示图例的，上面用到了label，这里就需要这个了。
-plt.savefig(".//T19//loss.png")
+plt.savefig(".//T20//loss.png")
 plt.show()
 plt.plot(loss_y,Accuracy)
 plt.xlabel("Epochs")
 plt.ylabel("Accuracy(%)")
 plt.title("Prediction Accuracy")
 plt.grid(True)
-plt.savefig(".//T19//Ac.png")
+plt.savefig(".//T20//Ac.png")
 plt.show()  
-
-# In 1 epoch: the loss is:1.128518447089378
-# In 2 epoch: the loss is:0.8388138305195763
-# In 3 epoch: the loss is:0.7959261896360256
-# In 4 epoch: the loss is:0.7731772202360051
-# In 5 epoch: the loss is:0.7577929662926423
-# 第5epoch展示测试结果:
-# Loss in 5个 epoch(Test set):0.6318638611443436
-# 第5个epoch准确率为:78.61%
-# In 6 epoch: the loss is:0.7546959168008526
-# In 7 epoch: the loss is:0.7448171393950577
-# In 8 epoch: the loss is:0.7365307790391585
-# In 9 epoch: the loss is:0.7337617107364528
-# In 10 epoch: the loss is:0.7308984091672142
-# 第10epoch展示测试结果:
-# Loss in 10个 epoch(Test set):0.6098719129833994
-# 第10个epoch准确率为:78.94%
-# In 11 epoch: the loss is:0.7217906925379468
-# In 12 epoch: the loss is:0.7158803442859893
-# In 13 epoch: the loss is:0.723057499017252
-# In 14 epoch: the loss is:0.7114191809883508
-# In 15 epoch: the loss is:0.7135936009609486
-# 第15epoch展示测试结果:
-# Loss in 15个 epoch(Test set):0.6049525360517864
-# 第15个epoch准确率为:79.10000000000001%
-# In 16 epoch: the loss is:0.7132633945826069
-# In 17 epoch: the loss is:0.7147559068544441
-# In 18 epoch: the loss is:0.7187649482656318
-# In 19 epoch: the loss is:0.7173347323751815
-# In 20 epoch: the loss is:0.719469146198019
-# 第20epoch展示测试结果:
-# Loss in 20个 epoch(Test set):0.6101234464705745
-# 第20个epoch准确率为:78.77%
