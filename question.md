@@ -251,3 +251,5 @@ Dropout的原理：在训练过程中的每一步，它会以一定的概率 p �
 这个练习将为你打开通往循环神经网络 (RNNs)、Transformers 和大型语言模型 (LLMs) 的大门。
 
 **搜索提示词:** `pytorch nn.Embedding`, `pytorch vocabulary for nlp`
+
+

@@ -94,5 +94,5 @@ for i in range(10001):
 #   return F.mse_loss(input, target, reduction=self.reduction)
 # C:\Users\xmz14_ugn3mh4\anaconda3\envs\pytorch_cpu\Lib\site-packages\torch\nn\modules\loss.py:616: UserWarning: Using a target size (torch.Size([8])) that is different to the input size (torch.Size([8, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
 #   return F.mse_loss(input, target, reduction=self.reduction)
-# C:\Users\xmz14_ugn3mh4\anaconda3\envs\pytorch_cpu\Lib\site-packages\torch\nn\modules\loss.py:616: UserWarning: Using a target size (torch.Size([12])) that is different to the input size (torch.Size([12, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+# C:\Users\xmz14_ugn3mh4\anaconda3\envs\pytorch_cpu\Lib\site-packages\torch\nn\modules\loss.py:616: UserWarning: Using a target size (torch.Size( )) that is different to the input size (torch.Size([12, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
 #   return F.mse_loss(input, target, reduction=self.reduction)
